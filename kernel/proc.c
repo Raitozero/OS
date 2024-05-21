@@ -657,3 +657,12 @@ procdump(void)
     printf("\n");
   }
 }
+
+
+uint64 getProcNum(){
+  uint64 ans = 0;
+  for(int i = 0; i < NPROC; i++){
+    if(proc[i].state != UNUSED) ans++;
+  }
+  return ans;
+}
