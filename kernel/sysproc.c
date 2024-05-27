@@ -77,12 +77,31 @@ sys_sleep(void)
 
 
 #ifdef LAB_PGTBL
+
+#define UPPERBOUND 64
 int
 sys_pgaccess(void)
 {
   // lab pgtbl: your code here.
+  uint64 va, dst;
+  int len;
+  if(argaddr(0, &va) | argint(1, &len) | argaddr(2, &dst)) return -1;
+  len = len > UPPERBOUND ? UPPERBOUND: len;
+  uint64 buffer = 0;
+  for(int i = 0; i < len; i++){
+    pte_t* pte = walk(myproc()->pagetable, va, 0);
+    if(*pte & PTE_A){
+      //if the 1st page is accessed, buffer = ...0001; and if 2nd page, buffer = ...0011;
+      buffer = buffer | (1L << i);
+      //clear PTE_A after checking if it is set
+      *pte ^= PTE_A;
+    }
+    va += PGSIZE;
+  }
+  if(copyout(myproc()->pagetable, dst, (char*)&buffer, sizeof(buffer))) return -1;
   return 0;
 }
+
 #endif
 
 uint64
