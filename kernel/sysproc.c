@@ -98,6 +98,7 @@ sys_pgaccess(void)
     }
     va += PGSIZE;
   }
+  //notice this has to be &buffer because copyout() copies from (char* src), an addr
   if(copyout(myproc()->pagetable, dst, (char*)&buffer, sizeof(buffer))) return -1;
   return 0;
 }
