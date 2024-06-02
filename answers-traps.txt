@@ -1,0 +1,6 @@
+1. a0-a7 for arguments. a0 contains the string, a1 contains 12, a2 contains 13;
+2. "26: 45b1 li a1,12";
+3. printf located at "0000000000000616 <printf>";
+4. "jalr 1510(ra)" will set ra to next instruction which is current address(pc)+4 = 0x38, then jump to printf;
+5. little-endian: "He110 World"; If in Big-endian, just change i = 0x726c6400; no need to change
+6. y equals an arbitrary number or error under certain environment.

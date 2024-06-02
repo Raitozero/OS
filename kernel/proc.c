@@ -140,7 +140,11 @@ found:
   memset(&p->context, 0, sizeof(p->context));
   p->context.ra = (uint64)forkret;
   p->context.sp = p->kstack + PGSIZE;
-
+  
+  // //Lab Trap: initiate alarmTicks & alarmTicksElapsed
+  // p->alarmTicks = 0;
+  // p->alarmTicksElapsed = 0;
+  // p->occupied = 0;
   return p;
 }
 
