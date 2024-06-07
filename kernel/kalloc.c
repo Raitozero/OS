@@ -39,7 +39,6 @@ freerange(void *pa_start, void *pa_end)
   char *p;
   p = (char*)PGROUNDUP((uint64)pa_start);
   for(; p + PGSIZE <= (char*)pa_end; p += PGSIZE){
-    ref_count[(uint64)p >> 12] = 1;
     kfree(p);
   }
 }
