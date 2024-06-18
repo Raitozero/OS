@@ -1,0 +1,9 @@
+Q: Why are there missing keys with 2 threads, but not with 1 thread? 
+Identify a sequence of events with 2 threads that can lead to a key being missing. 
+
+A: 1 thread is sequential. There is no problem. 
+2 threads without lock have race conditions when both threads are trying to insert a new entry.
+When they are inserting to the same table[i], say table[2], suppose table[2] = e1,e2,e3
+thread 1 is trying to insert e100, then table[2] = e100, e1, e2, e3 as expected, 
+and thread 2 is trying to insert e200 which would make table[2] = e200, e1, e2, e3;
+Without lock, they will end up with losing one entry.
