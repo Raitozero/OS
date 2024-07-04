@@ -104,11 +104,11 @@ e1000_transmit(struct mbuf *m)
   //
   acquire(&e1000_lock);
   uint32 tx_index = regs[E1000_TDT]; // tx descriptor ring's tail
-  if(tx_index > TX_RING_SIZE) {
+  if(tx_index >= TX_RING_SIZE) {
     release((&e1000_lock));
     return -1;
   }
-  if(tx_ring[tx_index].status & E1000_TXD_STAT_DD == 0) {
+  if((tx_ring[tx_index].status & E1000_TXD_STAT_DD) == 0) {
     release(&e1000_lock);
     return -1;
   }
@@ -127,10 +127,10 @@ e1000_transmit(struct mbuf *m)
   //advance the tail by 1
   regs[E1000_TDT] = (tx_index+1) % TX_RING_SIZE;
   
-  if (&tx_ring[tx_index] == 0 || tx_mbufs[tx_index] == 0) {
-    release(&e1000_lock);
-    return -1;
-  }
+  // if (&tx_ring[tx_index] == 0 || tx_mbufs[tx_index] == 0) {
+  //   release(&e1000_lock);
+  //   return -1;
+  // }
   release((&e1000_lock));
   return 0;
 }
@@ -146,7 +146,7 @@ e1000_recv(void)
   //
   while(1){
     uint32 rx_index = (regs[E1000_RDT] + 1) % RX_RING_SIZE; // receive ring buffer tail
-    if(rx_ring[rx_index].status & E1000_RXD_STAT_DD == 0){
+    if((rx_ring[rx_index].status & E1000_RXD_STAT_DD) == 0){
       return;
     }
     rx_mbufs[rx_index]->len = rx_ring[rx_index].length;
